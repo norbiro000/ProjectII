@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html ng-app="myPlace"><head>
+<!-- Standard Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="dist/semantic.min.js"></script>
+<script src="dist/angular/angular.js"></script>
+<script src="dist/js/app.js"></script>
+<link rel="stylesheet" type="text/css" href="dist/semantic.min.css">
+<style type="text/css">
+	body {
+		background-color: #DADADA;
+	}
+	body > .grid {
+		height: 100%;
+	}
+	.image {
+		margin-top: -100px;
+	}
+	.column {
+
+
+	}
+	.main.container {
+		margin-top: 7em;
+
+	}
+	.main{
+
+	}
+	.container{
+		/*background: red;*/
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('.menu .item')
+		.tab();
+
+		$('.ui.item .ui.embed').embed();
+
+	});
+</script>
+
+</head>
+<body>
+	<div class="ui fixed inverted menu">
+		<div class="ui container">
+			<a href="main.html" class="header item">
+				<img class="logo" src="">
+				Travel Agent Mangement
+			</a>
+			<a href="myplace.html" class="item">My Place</a>
+			<a href="mycustomer.html" class="item">My Customer<div class="ui red label">5</div></a>
+			<a href="myagency.html" class="item">My Agency<div class="ui red label">2</div></a>
+</div>
+</div>
+
+<div class="ui container main" ng-Controller="MyPlaceCtrl">
+	<div class="ui top attached tabular menu">
+		<a class="item active" data-tab="first">Price</a>
+		<a class="item" data-tab="fourth">Set Content</a>
+		<a class="item" data-tab="second">Address</a>
+	</div>
+	<div class="ui bottom attached tab segment active" data-tab="first">
+		<div class="ui segment">
+			<h2 class="ui header">Set Price</h2>
+			<p>Set price for you agent to show and sell for you.</p>
+			<div class="ui grid">
+				<div class="sixteen wide column">
+					<div class="ui left action input right labeled">
+						<button class="ui primary labeled icon button">
+							<i class="Dollar icon"></i>
+							Net Price
+						</button>
+						<input type="text" value="{{price.netprice}}">
+						<div class="ui basic label">
+							Baht
+						</div>
+					</div>
+				</div>
+
+
+				<div class="sixteen wide column">
+					<div class="ui left action input right labeled ">
+						<button class="ui primary labeled icon button">
+							<i class="Dollar icon"></i>
+							Max Price
+						</button>
+						<input type="text" value="{{price.maxprice}}">
+						<div class="ui basic label">
+							Baht
+						</div>
+					</div>
+				</div>
+				<div class="sixteen wide column">
+					<button class="ui button teal ">Save</button>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ui bottom attached tab segment" data-tab="fourth">
+		<div class="ui segment">
+			<h2 class="ui header">Set Content</h2>
+			<p>Agency will show them to tourists.</p>
+			<h4 class="ui dividing header">Description Information</h4>
+			<form class="ui form">
+				<div class="two fields">
+					<div class="field">
+						<label>Languages</label>
+						<select class="ui fluid dropdown">
+							<option value="en">English</option>
+							<option value="th">Thai</option>
+							<option value="cn">Chinese</option>
+						</select>
+					</div>
+					<div class="field">
+						<label>Description.</label>
+						<textarea rows="2"></textarea>
+					</div>
+				</div>
+				<div class="field">
+					<button class="ui button" type="submit">Other Language</button>
+				</div>
+				<div class="field">
+					<button class="ui button teal" type="submit">Save</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="ui segment">
+			<h2 class="ui header">More Detail</h2>
+			<p>Agency will show them to tourists.</p>
+			<button class="ui button teal">New Content</button>
+
+
+			<!-- ITEM -->
+			<div class="ui items" ng-repeat="item in items" style="box-shadow: 0 1px 2px 0 rgba(34,36,38,.15); padding :10px; border: 1px solid rgba(34,36,38,.15);">
+				<div class="ui item">
+					<div class="ui large image">
+						<img ng-src="{{item.image}}">
+					</div>
+					<div class="content" style=" padding :10px;">
+						<div class="header">{{item.title}}</div>
+						<div class="description">
+							<p style="word-wrap: break-word;">
+								{{item.description}}
+							</p>
+						</div>
+						<div class="extra">
+							<div class="ui right floated primary button">
+								Edit
+								<i class="right chevron icon"></i>
+							</div>
+							<div class="ui right floated Red button">
+								Delete
+								<i class="right chevron icon"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END ITEM -->
+
+			<!-- ITEM -->
+			<div class="ui items" style="box-shadow: 0 1px 2px 1px rgba(34,36,38,.15); padding :10px;">
+				<div class="ui item">
+
+					<div class="ui embed large image" data-url="http://player.vimeo.com/video/63534746" data-placeholder=""></div>
+
+
+					<div class="content" style=" padding :10px;">
+						<div class="header">Tiger Show at night.</div>
+						<div class="description">
+							<p style="word-wrap: break-word;">
+							"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?"
+							</p>
+						</div>
+						<div class="extra">
+							<div class="ui right floated primary button">
+								Edit
+								<i class="right chevron icon"></i>
+							</div>
+							<div class="ui right floated Red button">
+								Delete
+								<i class="right chevron icon"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<!-- END ITEM -->
+
+
+
+		</div>
+	</div>
+
+	<div class="ui bottom attached tab segment" data-tab="second">
+		<div class="ui segment">
+			
+			<h4 class="ui dividing header">Address Information</h4>
+					<form class="ui form">
+						<div class="field">
+							<label>Place Name</label>
+							
+							<input type="text" name="first-name" placeholder="" value="{{address[0].placename}}">
+						</div>
+						<div class="field">
+							<label>Tel.</label>
+							<input type="text" name="last-name" placeholder="" value="{{address[0].telephone}}">
+						</div>
+						<div class="field">
+							<label>Email</label>
+							<input type="text" name="last-name" placeholder="" value="{{address[0].email}}">
+						</div>
+						<div class="field">
+								<label>Province</label>
+								<select class="ui fluid dropdown" >
+									<option value="phuket">Phuket</option>
+									<option value="krabi">Krabi</option>
+									<option value="phangnga">Phangnga</option>
+								</select>
+							</div>
+						<div class="field">
+								<label>Address</label>
+								<textarea rows="2">{{address[0].address}}</textarea>
+						</div>
+						<button class="ui button teal" type="submit">Save</button>
+					</form>
+		</div>
+	</div>
+
+</div>
+</body></html>
