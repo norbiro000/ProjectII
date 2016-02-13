@@ -7,7 +7,12 @@ var commentSchema = mongoose.Schema({
     	maxprice : String
     }],
     contents : [{
-    	th : String
+    	String : String
+    }],
+    items : [{
+        image : String,
+        title : String,
+        description : String
     }],
     address : [{
     	telephone : String,

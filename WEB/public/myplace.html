@@ -69,37 +69,41 @@
 		<div class="ui segment">
 			<h2 class="ui header">Set Price</h2>
 			<p>Set price for you agent to show and sell for you.</p>
-			<div class="ui grid">
-				<div class="sixteen wide column">
-					<div class="ui left action input right labeled">
-						<button class="ui primary labeled icon button">
-							<i class="Dollar icon"></i>
-							Net Price
-						</button>
-						<input type="text" value="{{price.netprice}}">
-						<div class="ui basic label">
-							Baht
+
+			<form novalidate class="">
+				<div class="ui grid">
+						<div class="sixteen wide column">
+							<div class="ui left action input right labeled">
+								<button class="ui primary labeled icon button">
+									<i class="Dollar icon"></i>
+									Net Price
+								</button>
+								<input type="text" ng-model="price.netprice">
+								<div class="ui basic label">
+									Baht
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
 
 
-				<div class="sixteen wide column">
-					<div class="ui left action input right labeled ">
-						<button class="ui primary labeled icon button">
-							<i class="Dollar icon"></i>
-							Max Price
-						</button>
-						<input type="text" value="{{price.maxprice}}">
-						<div class="ui basic label">
-							Baht
+						<div class="sixteen wide column">
+							<div class="ui left action input right labeled ">
+								<button class="ui primary labeled icon button">
+									<i class="Dollar icon"></i>
+									Max Price
+								</button>
+								<input type="text" ng-model="price.maxprice">
+								<div class="ui basic label">
+									Baht
+								</div>
+							</div>
 						</div>
-					</div>
+						<div class="sixteen wide column">
+							<button class="ui button teal " ng-click="updatePrice(price)">Save</button>	
+						</div>
 				</div>
-				<div class="sixteen wide column">
-					<button class="ui button teal ">Save</button>	
-				</div>
-			</div>
+			</form>
+			<pre>price = {{price | json}}</pre>
 		</div>
 	</div>
 
