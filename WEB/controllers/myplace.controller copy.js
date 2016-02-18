@@ -2,6 +2,7 @@ var Place = require('../models/myplace.js');
 
 module.exports = function (socket) {
     //clear Interval
+
     if(interval){
         clearInterval(interval);
     }

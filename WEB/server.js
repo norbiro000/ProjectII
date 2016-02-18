@@ -6,13 +6,15 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     server, io;
 
+var address = require('./config/config.js');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var router = express.Router();  
 
 var mongoose = require('mongoose');
-	mongoose.connect('mongodb://inmy.site/test');
+	mongoose.connect('mongodb://'+address.ServerURL+'/test');
 	module.exports = mongoose;
 
 var Place = require('./models/myplace')
@@ -23,6 +25,7 @@ router.route('/place')
                 res.send(err);
             res.json(Place);
         });
+        
     });
 
 router.route('/place/:place_id')
@@ -66,7 +69,7 @@ app.get('/', function (req, res) {
 
 
 server = http.Server(app);
-server.listen(8888);
+server.listen(address.Port);
 
 io = socketIO(server);
 
