@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 var router = express.Router();  
 
 var mongoose = require('mongoose');
-	mongoose.connect('mongodb://inmy.site/test');
+	mongoose.connect('mongodb://phuket.cloud/test');
 	module.exports = mongoose;
 
 var Place = require('./models/myplace')
@@ -66,7 +66,7 @@ app.get('/', function (req, res) {
 
 
 server = http.Server(app);
-server.listen(5000);
+server.listen(8888);
 
 io = socketIO(server);
 
