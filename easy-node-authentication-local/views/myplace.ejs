@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html ng-app="myPlace"><head>
+<!-- Standard Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="dist/semantic.min.js"></script>
+<script src="dist/angular/angular.js"></script>
+<script src="dist/js/app.js"></script>
+<link rel="stylesheet" type="text/css" href="dist/semantic.min.css">
+<style type="text/css">
+	body {
+		background-color: #DADADA;
+	}
+	body > .grid {
+		height: 100%;
+	}
+	.image {
+		margin-top: -100px;
+	}
+	.column {
+
+
+	}
+	.main.container {
+		margin-top: 7em;
+
+	}
+	.main{
+
+	}
+	.container{
+		/*background: red;*/
+	}
+</style>
+
+<script>
+	var asdf;
+	$(document).ready(function() {
+		$('.menu .item')
+		.tab();
+
+		$('.ui.item .ui.embed').embed();
+
+		$('.show-modal').on('click', function(){
+			$('#newcontent-modal')
+			.modal('setting', {
+				closable  : true,
+				onDeny    : function(){
+					window.alert('Wait not yet!');
+					return false;
+				},
+				onApprove : function() {
+					var form = $('#newcontent').serializeArray();
+					$.ajax({
+						method : 'POST',
+						data: form,
+						url: 'http://localhost:8888/api/placecontent/',
+						success: function(data){
+							console.dir(data);	
+						},
+						error: function( data ){
+
+						}
+					});
+					window.alert('Approved!');
+				}
+			})
+			.modal('show')
+			;
+		});
+
+		$('.show-edit-modal').on('click', function(){
+			$('#editcontent-modal')
+			.modal('setting', {
+				closable  : true,
+				onDeny    : function(){
+					window.alert('Wait not yet!');
+					return false;
+				},
+				onApprove : function() {
+					var form = $('#newcontent').serializeArray();
+					$.ajax({
+						method : 'POST',
+						data: form,
+						url: 'http://localhost:8888/api/placecontent/',
+						success: function(data){
+							console.dir(data);	
+						},
+						error: function( data ){
+
+						}
+					});
+					window.alert('Approved!');
+				}
+			})
+			.modal('show')
+			;
+		});
+
+	});
+</script>
+
+<script>
+	var palceRederData = <%- JSON.stringify(place) %>;
+	var placeContent = <%- JSON.stringify(content) %>;
+</script>
+
+</head>
+<body>
+	<% include navigation %>
+
+	<div class="ui container main" ng-Controller="MyPlaceCtrl">
+		<div class="ui top attached tabular menu">
+			<a class="item active" data-tab="first">Price</a>
+			<a class="item" data-tab="fourth">Set Content</a>
+			<a class="item" data-tab="second">Address</a>
+		</div>
+		<div class="ui bottom attached tab segment active" data-tab="first">
+			<div class="ui segment">
+				<h2 class="ui header">Set Price</h2>
+				<p>Set price for you agent to show and sell for you.</p>
+
+				<form novalidate class="">
+					<div class="ui grid">
+						<div class="sixteen wide column">
+							<div class="ui left action input right labeled">
+								<button class="ui primary labeled icon button">
+									<i class="Dollar icon"></i>
+									Net Price
+								</button>
+								<input type="text" ng-model="price.netprice">
+								<div class="ui basic label">
+									Baht
+								</div>
+							</div>
+						</div>
+
+
+						<div class="sixteen wide column">
+							<div class="ui left action input right labeled ">
+								<button class="ui primary labeled icon button">
+									<i class="Dollar icon"></i>
+									Max Price
+								</button>
+								<input type="text" ng-model="price.maxprice">
+								<div class="ui basic label">
+									Baht
+								</div>
+							</div>
+						</div>
+						<div class="sixteen wide column">
+							<button class="ui button teal " ng-click="updatePrice(price)">Save</button>	
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+		<div class="ui bottom attached tab segment" data-tab="fourth">
+			<div class="ui segment">
+				<h2 class="ui header">Set Content</h2>
+				<p>Agency will show them to tourists.</p>
+				<h4 class="ui dividing header">Description Information</h4>
+				<form class="ui form">
+					<div class="two fields">
+						<div class="field">
+							<label>Languages</label>
+							<select class="ui fluid dropdown">
+								<option value="en">English</option>
+								<option value="th">Thai</option>
+								<option value="cn">Chinese</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>Description.</label>
+							<textarea rows="2"></textarea>
+						</div>
+					</div>
+					<div class="field">
+						<button class="ui button" type="submit">Other Language</button>
+					</div>
+					<div class="field">
+						<button class="ui button teal" type="submit">Save</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="ui segment">
+				<h2 class="ui header">More Detail</h2>
+				<p>Agency will show them to tourists.</p>
+				<button class="ui button teal show-modal" ng-click="">New Content</button>
+
+
+				<!-- ITEM -->
+				<div class="ui items" ng-repeat="item in items" style="box-shadow: 0 1px 2px 0 rgba(34,36,38,.15); padding :10px; border: 1px solid rgba(34,36,38,.15);" ng-init="index=0">
+					<div class="ui item grid" data-index="{{index}}">
+
+						<div class="ui embed eight wide column" data-url="{{item.content.url}}" data-placeholder="" style="height:300px" ng-if="item.content.ttype == 'video'"></div>
+
+
+						<!-- </div> -->
+						<div class="ui large image" ng-if="item.content.ttype == 'image'">
+							<img ng-src="{{item.content.url}}">
+						</div>
+
+						<div class="content eight wide column" style=" padding :10px;">
+							<div class="header">{{item.content.title}}</div>
+							<div class="description">
+								<p style="word-wrap: break-word;">
+									{{item.content.description}}
+								</p>
+							</div>
+							<div class="extra">
+								<button class="ui right floated primary button show-edit-modal" ng-click="edit(items[0])">
+									Edit
+									<i class="right chevron icon"></i>
+								</button>
+								<div class="ui right floated Red button" ng-click="delete(item._id)">
+									Delete
+									<i class="right chevron icon"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END ITEM -->
+
+
+
+
+
+			</div>
+		</div>
+
+		<div class="ui bottom attached tab segment" data-tab="second">
+			<div class="ui segment">
+
+				<h4 class="ui dividing header">Address Information</h4>
+				<form class="ui form">
+					<div class="field">
+						<label>Place Name</label>
+						<input type="text" name="first-name" placeholder="" ng-model="address.placename">
+					</div>
+					<div class="field">
+						<label>Tel.</label>
+						<input type="text" name="last-name" placeholder="" ng-model="address.telephone">
+					</div>
+					<div class="field">
+						<label>Email</label>
+						<input type="text" name="last-name" placeholder="" ng-model="address.email">
+					</div>
+					<div class="field">
+						<label>Province</label>
+						<select class="ui fluid dropdown" ng-model="address.province">
+							<option value="phuket">Phuket</option>
+							<option value="krabi">Krabi</option>
+							<option value="phangnga">Phangnga</option>
+						</select>
+					</div>
+					<div class="field">
+						<label>Address</label>
+						<textarea rows="2" ng-model="address.address"></textarea>
+					</div>
+					<button class="ui button teal" ng-click="updateAddress(address)">Save</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- MODAL ZONE -->
+
+		<div class="ui modal" id="newcontent-modal">
+			<div ng-init="newcontent.title=''"></div>
+			<div ng-init="newcontent.description=''"></div>
+			<div class="header">Header</div>
+			<div class="content">
+				<form class="ui form" id="newcontent" >
+					<div ngif=""></div>
+					<div class="grouped fields">
+						<label>How often do you use checkboxes?</label>
+						<div class="field">
+							<div class="ui radio checkbox" ng-init="newcontent.type='image'">
+								<input type="radio" name="example1" checked="checked" ng-model="newcontent.type" value="image">
+								<label>Image</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui radio checkbox">
+								<input type="radio" name="example1" ng-model="newcontent.type" value="video">
+								<label>Video</label>
+							</div>
+						</div>
+					</div>
+
+					<div ng-if="newcontent.type == 'image'">
+						<div class="field">
+							<input type="file" name="file" ng-model="newcontent.url">
+						</div>
+					</div>
+					<div ng-if="newcontent.type == 'video'">
+						<div class="field">
+							<label>URL</label>
+							<input type="text" name="url" placeholder="URL" ng-model="newcontent.url">
+						</div>
+					</div>
+
+					<div class="field">
+						<label>Title</label>
+						<input type="text" name="title" placeholder="Title" ng-model="newcontent.title">
+					</div>
+					<div class="field">
+						<label>descripton</label>
+						<textarea placeholder="Description" name="description" ng-model="newcontent.description"></textarea>
+					</div>
+				</form>
+
+			</div>
+			<div class="footer">
+				<div class="actions">
+					<div class="ui button " ng-click="clear()">Clear</div>
+					<div class="ui button red">Cancel</div>
+					<div class="ui cancel button teal" ng-click="save(newcontent)">Save</div>
+				</div>
+			</div>
+		</div>
+		<!-- END MODAL -->
+
+		<!-- MODAL ZONE -->
+
+		<div class="ui modal edit" id="editcontent-modal">
+		{{editcontent}}
+			<div class="header">Header</div>
+			<div class="content">
+				<form class="ui form" id="newcontent" >
+					<div ngif=""></div>
+					<div class="grouped fields">
+						<label>How often do you use checkboxes?</label>
+						<div class="field">
+							<div class="ui radio checkbox">
+								<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="image">
+								<label>Image</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui radio checkbox">
+								<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="video">
+								<label>Video</label>
+							</div>
+						</div>
+					</div>
+
+					<div ng-if="editcontent.content.ttype == 'image'">
+						<div class="field">
+							<input type="file" name="file" ng-model="editcontent.content.url">
+						</div>
+					</div>
+					<div ng-if="editcontent.content.ttype == 'video'">
+						<div class="field">
+							<label>URL</label>
+							<input type="text" name="url" placeholder="URL" ng-model="editcontent.content.url">
+						</div>
+					</div>
+
+					<div class="field">
+						<label>Title</label>
+						<input type="text" name="title" placeholder="Title" ng-model="editcontent.content.title">
+					</div>
+					<div class="field">
+						<label>descripton</label>
+						<textarea placeholder="Description" name="description" ng-model="editcontent.content.description"></textarea>
+					</div>
+				</form>
+
+			</div>
+			<div class="actions">
+				<div class="ui button red">Cancel</div>
+				<div class="ui cancel button teal" ng-click="update(editcontent._id)">Save</div>
+			</div>
+		</div>
+		<!-- END MODAL -->
+
+	</div>
+
+
+</body></html>

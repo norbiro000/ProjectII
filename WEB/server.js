@@ -25,7 +25,14 @@ router.route('/place')
                 res.send(err);
             res.json(Place);
         });
-        
+
+    });
+
+
+router.route('/placecontent/')
+    .post(function (req, res){
+        console.dir(req.body);
+        res.send("I Got it");
     });
 
 router.route('/place/:place_id')

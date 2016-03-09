@@ -74,9 +74,15 @@
 	});
 </script>
 
+<script>
+	var palceRederData = <%- JSON.stringify(place) %>;
+	console.log(palceRederData);
+ </script>
+
 </head>
 <body>
 <!-- MODAL ZONE -->
+
 <div class="ui modal">
   <div class="header">Header</div>
   <div class="content">
@@ -101,17 +107,7 @@
 </div>
 
 <!-- END MODAL -->
-	<div class="ui fixed inverted menu">
-		<div class="ui container">
-			<a href="main.html" class="header item">
-				<img class="logo" src="">
-				Travel Agent Mangement
-			</a>
-			<a href="myplace.html" class="item">My Place</a>
-			<a href="mycustomer.html" class="item">My Customer<div class="ui red label">5</div></a>
-			<a href="myagency.html" class="item">My Agency<div class="ui red label">2</div></a>
-</div>
-</div>
+<% include navigation %>
 
 <div class="ui container main" ng-Controller="MyPlaceCtrl">
 	<div class="ui top attached tabular menu">
@@ -264,19 +260,19 @@
 		<div class="ui segment">
 			
 			<h4 class="ui dividing header">Address Information</h4>
-					<form class="ui form">
+					<form class="ui form" method="put" action="myplace">
 						<div class="field">
 							<label>Place Name</label>
 							
-							<input type="text" name="first-name" placeholder="" value="{{address[0].placename}}">
+							<input type="text" name="first-name" placeholder="" value="{{address.placename}}">
 						</div>
 						<div class="field">
 							<label>Tel.</label>
-							<input type="text" name="last-name" placeholder="" value="{{address[0].telephone}}">
+							<input type="text" name="last-name" placeholder="" value="{{address.telephone}}">
 						</div>
 						<div class="field">
 							<label>Email</label>
-							<input type="text" name="last-name" placeholder="" value="{{address[0].email}}">
+							<input type="text" name="last-name" placeholder="" value="{{address.email}}">
 						</div>
 						<div class="field">
 								<label>Province</label>
@@ -288,12 +284,13 @@
 							</div>
 						<div class="field">
 								<label>Address</label>
-								<textarea rows="2">{{address[0].address}}</textarea>
+								<textarea rows="2">{{address.address}}</textarea>
 						</div>
 						<button class="ui button teal" type="submit">Save</button>
 					</form>
 		</div>
 	</div>
-
 </div>
+
+
 </body></html>

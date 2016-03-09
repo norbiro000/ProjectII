@@ -1,4 +1,4 @@
-var address = "http://phuket.cloud:8888";
+var address = "http://localhost:8888";
 
 angular.module('myPlace', [])
 .controller('MyPlaceCtrl', function($scope, $http) {
