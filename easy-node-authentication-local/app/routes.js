@@ -1,5 +1,6 @@
 var Place = require('./controllers/myplace.controller');
 var Content = require('./controllers/content.controller');
+var Voucher = require('./controllers/voucher.controller');
 
 // app/routes.js
 module.exports = function(app, passport) {
@@ -77,6 +78,33 @@ module.exports = function(app, passport) {
 		Place.savePlaceInformation(req, res);
 	});
 
+	// =====================================
+	// CONTENT ==============================
+	// =====================================
+	app.get('/mycustomer', isLoggedIn, function(req, res) {
+		res.render('mycustomer.ejs', { message: req.flash('signupMessage') });
+	});
+
+
+	// =====================================
+	// VOUCHER ==============================
+	// =====================================
+
+	app.get('/voucher', isLoggedIn, function(req, res) {
+		Voucher.getVoucher();
+	});
+
+	app.post('/voucher', isLoggedIn, function(req, res) {
+		Voucher.insertVoucher();
+	});
+
+	app.put('/voucher/:voucher_id', isLoggedIn, function(req, res) {
+		Voucher.editVourcher();
+	});
+
+	app.delete('/voucher/:vourcher_id', isLoggedIn, function(req, res) {
+		Voucher.deleteVourcher();
+	});
 
 	// =====================================
 	// CONTENT ==============================

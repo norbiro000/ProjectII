@@ -1,5 +1,3 @@
-
-
 angular.module('myPlace', [])
 .controller('MyPlaceCtrl', function($scope, $http) {
 	$scope.email = window.palceRederData[0]["email"];
@@ -73,6 +71,29 @@ angular.module('myPlace', [])
     };
 
 });
+
+
+angular.module('myCustomer', [])
+.controller('customersCtrl', function($scope, $http) {
+
+	$scope.$emit('LOAD');
+    $http.get("http://www.w3schools.com/angular/customers.php")
+    .then(
+    	function (response) {$scope.names = response.data.records;
+   		 $scope.$emit('UNLOAD');
+	});
+
+
+    $scope.filterType1  = function(item){
+    	return item.type === 1;
+    }
+
+})
+.controller('appCtrl',['$scope',function($scope){
+		$scope.$on('LOAD',function(){$scope.loading=true});
+		$scope.$on('UNLOAD',function(){$scope.loading=false});
+	}]);
+
 
 
 
