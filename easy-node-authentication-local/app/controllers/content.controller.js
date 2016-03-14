@@ -7,6 +7,7 @@ exports.addNewContent = function (req, res ) {
 
 	console.dir(con.content.title);
 	content.email = con.email;
+	content.owner_id = req.user._id;
 	content.content= {
 		title : con.content.title,
 		description : con.content.description,
@@ -40,6 +41,7 @@ exports.editContent = function (id, datas, done ) {
 	  done(err, content);
 	});
 };
+
 
 exports.deleteContent = function (id, done ) {
 	console.dir("DELETE");

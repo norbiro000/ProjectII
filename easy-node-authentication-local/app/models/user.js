@@ -9,7 +9,9 @@ var userSchema = mongoose.Schema({
     local            : {
         email        : String,
         password     : String,
+        Type 		 : Number,
     },
+    partners		 : [ String ]
 
 });
 

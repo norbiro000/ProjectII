@@ -1,6 +1,7 @@
  var mongoose = require('mongoose');
 
 var commentSchema = mongoose.Schema({
+    owner_id: String,
     email: String,
     placename: String,
     price : {

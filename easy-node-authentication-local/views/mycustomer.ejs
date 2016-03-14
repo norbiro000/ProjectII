@@ -42,11 +42,12 @@
 </script>
 
 </head>
+
 <body ng-controller="appCtrl">
 	<% include navigation %>
 	<div class="ui container main" ng-controller="customersCtrl">
 		<div class="ui top attached tabular menu">
-			<a class="item active" data-tab="first">Booking<div class="ui red label">{{(names|filter:filterType1).length}}</div></a>
+			<a class="item active" data-tab="first">Booking<div class="ui red label">{{(names|filter:filterType0).length}}</div></a>
 			<a class="item" data-tab="fourth">Confirm Payment<div class="ui red label">1</div></a>
 			<a class="item" data-tab="second">Coming</a>
 			<a class="item" data-tab="third">Visited</a>
@@ -74,15 +75,15 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="x in names | filter:filterType1" >
+							<tr ng-repeat="x in names | filter:filterType0" >
 								{{name.length}}
-								<td>{{ x.Name }}</td>
-								<td>Mr. Jim Paobunjin</td>
+								<td>{{ x._id }}</td>
+								<td>{{ x.datas.guessName }}</td>
 								<!-- <td>1</td>
 								<td>22/01/2016</td>
 								<td>13:00</td> -->
-								<td>Mr. Donut</td>
-								<td><button class="ui button primary">Confirm</button></td>
+								<td>{{ x.agency_email }}</td>
+								<td><button class="ui button primary" ng-click="confirmBooking(x._id, 1)">Confirm</button></td>
 								<td><button class="ui button red">Inject</button></td>
 								<td><a href="#">View</a></td>
 							</tr>
@@ -114,13 +115,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr ng-repeat="x in names | filter:filterType1" >
 								<td>DRM-114</td>
 								<td>29/01/2016</td>
 								<td>13:00</td>
 								<td>600 Bath</td>
 								<td>Mr. Donut</td>
-								<td><button class="ui button primary">Approve</button></td>
+								<td><button class="ui button primary" ng-click="confirmBooking(x._id, 2)">Approve</button></td>
 								<td><button class="ui button red">Disapproval</button></td>
 								<td><a href="#">View</a></td>
 								<td><a href="#">View</a></td>
@@ -153,7 +154,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr ng-repeat="x in names | filter:filterType2" >
 								<td>DN-121</td>
 								<td>Jakkapan Thonglum</td>
 								<td>22/01/2016</td>
@@ -161,40 +162,7 @@
 								<td>Mr. Donut</td>
 								<!-- <td><a href="#">View</a></td> -->
 								<td><a href="#">View</a></td>
-								<td><button class="ui button primary">Visited</button>
-								<td><button class="ui button red">Not Visit</button>
-							</tr>
-							<tr>
-								<td>DN-122</td>
-								<td>John Lennon</td>
-								<td>25/01/2016</td>
-								<td>10:00</td>
-								<td>Mr. Donut</td>
-								<!-- <td><a href="#">View</a></td> -->
-								<td><a href="#">View</a></td>
-								<td><button class="ui button primary">Visited</button>
-								<td><button class="ui button red">Not Visit</button>
-							</tr>
-							<tr>
-								<td>PKJ04420</td>
-								<td>Steve Job</td>
-								<td>29/01/2016</td>
-								<td>09:00</td>
-								<td>Phuket Jett Tour</td>
-								<!-- <td><a href="#">View</a></td> -->
-								<td><a href="#">View</a></td>
-								<td><button class="ui button primary">Visited</button>
-								<td><button class="ui button red">Not Visit</button>
-							</tr>
-							<tr>
-								<td>KTV-342</td>
-								<td>Merk zuckerberg</td>
-								<td>29/01/2016</td>
-								<td>13:00</td>
-								<td>Krabi Travel</td>
-								<!-- <td><a href="#">View</a></td> -->
-								<td><a href="#">View</a></td>
-								<td><button class="ui button primary">Visited</button>
+								<td><button class="ui button primary" ng-click="confirmBooking(x._id, 3)">Visited</button>
 								<td><button class="ui button red">Not Visit</button>
 							</tr>
 						</tbody>
@@ -211,84 +179,18 @@
 					<table class="ui table">
 						<thead>
 							<tr>
-								<th>Name</th>
+								<th>Guess Name</th>
 								<th>Date</th>
 								<th>Time</th>
 								<th>Agency Name</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Steve Lennon</td>
-								<td>22/01/2016</td>
-								<td>13:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>John Lennon</td>
-								<td>25/01/2016</td>
-								<td>10:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>Steve Job</td>
-								<td>29/01/2016</td>
-								<td>09:00</td>
-								<td>Phuket Jett Tour</td>
-							</tr>
-							<tr>
-								<td>Merk zuckerberg</td>
-								<td>29/01/2016</td>
-								<td>13:00</td>
-								<td>Krabi Travel</td>
-							</tr>
-							<tr>
-								<td>Jakkapan Thonglum</td>
-								<td>22/01/2016</td>
-								<td>13:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>John Lennon</td>
-								<td>25/01/2016</td>
-								<td>10:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>Steve Job</td>
-								<td>29/01/2016</td>
-								<td>09:00</td>
-								<td>Phuket Jett Tour</td>
-							</tr>
-							<tr>
-								<td>Merk zuckerberg</td>
-								<td>29/01/2016</td>
-								<td>13:00</td>
-								<td>Krabi Travel</td>
-							</tr>
-							<tr>
-								<td>Jakkapan Thonglum</td>
-								<td>22/01/2016</td>
-								<td>13:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>John Lennon</td>
-								<td>25/01/2016</td>
-								<td>10:00</td>
-								<td>Mr. Donut</td>
-							</tr>
-							<tr>
-								<td>Steve Job</td>
-								<td>29/01/2016</td>
-								<td>09:00</td>
-								<td>Phuket Jett Tour</td>
-							</tr>
-							<tr>
-								<td>Merk zuckerberg</td>
-								<td>29/01/2016</td>
-								<td>13:00</td>
-								<td>Krabi Travel</td>
+							<tr ng-repeat="x in names | filter:filterType3" >
+								<td>{{x.datas.guessName}}</td>
+								<td>{{x.datas.date}}</td>
+								<td>{{x.datas.date}}</td>
+								<td>{{x.agency_email}}</td>
 							</tr>
 						</tbody>
 					</table>

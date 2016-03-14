@@ -76,16 +76,46 @@ angular.module('myPlace', [])
 angular.module('myCustomer', [])
 .controller('customersCtrl', function($scope, $http) {
 
-	$scope.$emit('LOAD');
-    $http.get("http://www.w3schools.com/angular/customers.php")
-    .then(
-    	function (response) {$scope.names = response.data.records;
-   		 $scope.$emit('UNLOAD');
-	});
+	load();
+	function load(){
+		$scope.$emit('LOAD');
+	    $http.get("http://localhost:8080/voucher")
+	    .then(
+	    	function (response) {
+	    		console.dir(response.data);
+	    	$scope.names = response.data;
+	   		$scope.$emit('UNLOAD');
+		});
 
+	}
+
+    $scope.filterType0  = function(item){
+    	return item.state === 0;
+    }
 
     $scope.filterType1  = function(item){
-    	return item.type === 1;
+    	return item.state === 1;
+    }
+
+    $scope.filterType2  = function(item){
+    	return item.state === 2;
+    }
+
+    $scope.filterType3  = function(item){
+    	return item.state === 3;
+    }
+
+    $scope.confirmBooking= function (item_id, state){
+    	$scope.$emit('LOAD');
+    	$http.put('/voucher/state/'+item_id, JSON.stringify({state}) ,{cache:false})
+			.success(function (data){
+				load();
+				$scope.$emit('UNLOAD');
+			})
+			.error(function (data, status){
+				alert(status);
+				$scope.$emit('UNLOAD');
+			});
     }
 
 })

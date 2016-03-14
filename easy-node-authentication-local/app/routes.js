@@ -1,6 +1,7 @@
 var Place = require('./controllers/myplace.controller');
 var Content = require('./controllers/content.controller');
 var Voucher = require('./controllers/voucher.controller');
+var Subscriber = require('./controllers/subscribe.controller');
 
 // app/routes.js
 module.exports = function(app, passport) {
@@ -20,6 +21,8 @@ module.exports = function(app, passport) {
 		// render the page and pass in any flash data if it exists
 		res.render('login.ejs', { message: req.flash('loginMessage') });
 	});
+
+	app.post('/loginAPI', passport.authenticate('local-mobile-login'));
 
 	// process the login form
 	app.post('/login', passport.authenticate('local-login', {
@@ -91,20 +94,50 @@ module.exports = function(app, passport) {
 	// =====================================
 
 	app.get('/voucher', isLoggedIn, function(req, res) {
-		Voucher.getVoucher();
+		// res.json( [{name:'fuck',image:'asdf.jpg'},{name:'ceme2',image:'2.jpg'}] );
+		Voucher.getVoucher(req.user.local.email, function(voucher){
+			res.json(voucher);
+		});
 	});
 
-	app.post('/voucher', isLoggedIn, function(req, res) {
-		Voucher.insertVoucher();
+	app.put('/voucher/state/:voucher_id', isLoggedIn, function(req, res) {
+		Voucher.setStateVoucher(req.params.voucher_id, req.body.state, function(voucher){
+			res.json(voucher);
+		});
 	});
 
-	app.put('/voucher/:voucher_id', isLoggedIn, function(req, res) {
-		Voucher.editVourcher();
+	// app.post('/voucher', isLoggedIn, function(req, res) {
+	// 	Voucher.insertVoucher();
+	// });
+
+	// app.put('/voucher/:voucher_id', isLoggedIn, function(req, res) {
+	// 	Voucher.editVourcher();
+	// });
+
+	// app.delete('/voucher/:vourcher_id', isLoggedIn, function(req, res) {
+	// 	Voucher.deleteVourcher();
+	// });
+
+
+	// =====================================
+	// Subscriber ==============================
+	// =====================================
+	app.put('/subscribe/', isLoggedIn, function(req, res) {
+		// console.dir(req);
+		Subscriber.subscriber(req.user._id, req.body.partner_ids);
+		res.send("200 OK");
 	});
 
-	app.delete('/voucher/:vourcher_id', isLoggedIn, function(req, res) {
-		Voucher.deleteVourcher();
+
+
+	app.get('/place', isLoggedIn, function(req, res) {
+
+		Place.getPlaceAPI(req.user.partners, function(places) {
+			res.json(places);
+		});
 	});
+
+
 
 	// =====================================
 	// CONTENT ==============================

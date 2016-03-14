@@ -71,14 +71,23 @@ module.exports = function(passport) {
                 newUser.save(function(err) {
                     if (err)
                         throw err;
-                    return done(null, newUser);
+
+                     //Add Data To database for Email
+                    newPlace.email         = email;
+                    console.dir(newUser._id);
+                    newPlace.owner_id      = newUser._id;
+                    newPlace.price.netprice = 0;
+                    newPlace.price.maxprice = 0;
+
+                    newPlace.address = {};
+
+                    newPlace.save(function(err) {
+                        if (err)
+                            throw err;
+                        return done(null, newUser);
+                    });
                 });
 
-                newPlace.save(function(err) {
-                    if (err)
-                        throw err;
-                    return done(null, newUser);
-                });
             }
 
         });
@@ -99,6 +108,38 @@ module.exports = function(passport) {
     },
     function(req, email, password, done) { // callback with email and password from our form
 
+        // find a user whose email is the same as the forms email
+        // we are checking to see if the user trying to login already exists
+        User.findOne({ 'local.email' :  email }, function(err, user) {
+            // if there are any errors, return the error before anything else
+            if (err)
+                return done(err);
+
+            // if no user is found, return the message
+            if (!user)
+                return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+
+            // if the user is found but the password is wrong
+            if (!user.validPassword(password))
+                return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+
+            // all is well, return successful user
+            req.session.email = email //save session to user
+            return done(null, user);
+        });
+
+    }));
+
+
+    passport.use('local-mobile-login', new LocalStrategy({
+        // by default, local strategy uses username and password, we will override with email
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function(req, email, password, done) { // callback with email and password from our form
+        console.dir(email);
+        console.dir(password);
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
         User.findOne({ 'local.email' :  email }, function(err, user) {
