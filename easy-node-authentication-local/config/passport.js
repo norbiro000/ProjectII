@@ -125,6 +125,7 @@ module.exports = function(passport) {
 
             // all is well, return successful user
             req.session.email = email //save session to user
+            
             return done(null, user);
         });
 

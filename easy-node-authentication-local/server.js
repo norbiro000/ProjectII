@@ -10,6 +10,8 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 var path 	 = require('path');
 var configDB = require('./config/database.js');
+var jwt      = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config   = require('./config/config.js'); // get our config file
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -24,6 +26,7 @@ app.configure(function() {
 	app.use(express.bodyParser()); // get information from html forms
 
 	app.set('view engine', 'ejs'); // set up ejs for templating
+	app.set('superSecret', config.secret); // set up ejs for templating
 
 	// required for passport
 	app.use(express.session({ secret: 'ilovescotchscotchyscotchscotche' })); // session secret
@@ -37,7 +40,6 @@ app.configure(function() {
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-
 // launch ======================================================================
 app.listen(port);
 console.log('The magic happens on port ' + port);

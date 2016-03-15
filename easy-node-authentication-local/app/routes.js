@@ -1,7 +1,10 @@
+var jwt    = require('jsonwebtoken');
 var Place = require('./controllers/myplace.controller');
 var Content = require('./controllers/content.controller');
 var Voucher = require('./controllers/voucher.controller');
 var Subscriber = require('./controllers/subscribe.controller');
+var User = require('./models/user');
+// var api = require('./apiRoute');
 
 // app/routes.js
 module.exports = function(app, passport) {
@@ -20,6 +23,48 @@ module.exports = function(app, passport) {
 	app.get('/login', function(req, res) {
 		// render the page and pass in any flash data if it exists
 		res.render('login.ejs', { message: req.flash('loginMessage') });
+	});
+
+	app.post('/api/authenticate/', function(req, res){
+        User.findOne({ 'local.email' :  req.body.email }, function(err, user) {
+            // if there are any errors, return the error before anything else
+            if (err)
+                return done(err);
+
+            // if no user is found, return the message
+            if (!user){
+                res.json({'status':'false'}); // req.flash is the way to set flashdata using connect-flash
+            	return false;
+            }
+
+            // if the user is found but the password is wrong
+            if (req.body.password != null || req.body.password != ""){
+            	if (!user.validPassword(req.body.password))
+                	res.json({'status':'false'}); // create the loginMessage and save it to session as flashdata
+            }
+            // all is well, return successful user
+            // req.session.email = email //save session to user
+            var token = jwt.sign(req.body.email, app.get('superSecret'), {
+          		expiresIn: '1000s', // expires in 24 hours
+        	});
+
+            res.json({status:"success",token:token})
+        });
+	});
+
+	app.get('/api/authenticatetest/:token', function(req, res){
+		if (req.params.token){
+		jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+	      if (err) {
+	        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+	      } else {
+	        // if everything is good, save to request for use in other routes
+	        res.send(decoded);
+	        req.decoded = decoded;    
+	      }
+	    });
+	}
+
 	});
 
 	app.post('/loginAPI', passport.authenticate('local-mobile-login'));
