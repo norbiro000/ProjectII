@@ -56,7 +56,7 @@ module.exports = function(passport) {
 
 				// if there is no user with that email
                 // create the user
-                var newPlace           = new Place();
+                // var newPlace           = new Place();
                 var newUser            = new User();
 
                 // set the user's local credentials
@@ -65,7 +65,17 @@ module.exports = function(passport) {
 
 
                 //Add Data To database for Email
-                newPlace.email         = email;
+                // newPlace.email         = email;
+
+
+                //Add Data To database for Company Name
+                if(req.body.companyName)
+                    newUser.companyName   = req.body.companyName;
+
+                //Add Data To database for type
+                newUser.local.user_type = 1
+
+
 
 				// save the user
                 newUser.save(function(err) {
@@ -73,19 +83,19 @@ module.exports = function(passport) {
                         throw err;
 
                      //Add Data To database for Email
-                    newPlace.email         = email;
-                    console.dir(newUser._id);
-                    newPlace.owner_id      = newUser._id;
-                    newPlace.price.netprice = 0;
-                    newPlace.price.maxprice = 0;
+                    // // newPlace.email         = email;
+                    // // console.dir(newUser._id);
+                    // // newPlace.owner_id      = newUser._id;
+                    // // newPlace.price.netprice = 0;
+                    // // newPlace.price.maxprice = 0;
 
-                    newPlace.address = {};
+                    // // newPlace.address = {};
 
-                    newPlace.save(function(err) {
-                        if (err)
-                            throw err;
+                    // newPlace.save(function(err) {
+                    //     if (err)
+                    //         throw err;
                         return done(null, newUser);
-                    });
+                    // });
                 });
 
             }

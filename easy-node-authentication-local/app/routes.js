@@ -2,8 +2,11 @@ var jwt    = require('jsonwebtoken');
 var Place = require('./controllers/myplace.controller');
 var Content = require('./controllers/content.controller');
 var Voucher = require('./controllers/voucher.controller');
+var Service = require('./controllers/service.controller');
 var Subscriber = require('./controllers/subscribe.controller');
+var Company = require('./controllers/user.controller');
 var User = require('./models/user');
+var Request = require('./models/request');
 // var api = require('./apiRoute');
 
 // app/routes.js
@@ -13,7 +16,7 @@ module.exports = function(app, passport) {
 	// HOME PAGE (with login links) ========
 	// =====================================
 	app.get('/', function(req, res) {
-		res.render('index.ejs'); // load the index.ejs file
+		res.render('login.ejs', { message: req.flash('loginMessage') });
 	});
 
 	// =====================================
@@ -23,6 +26,32 @@ module.exports = function(app, passport) {
 	app.get('/login', function(req, res) {
 		// render the page and pass in any flash data if it exists
 		res.render('login.ejs', { message: req.flash('loginMessage') });
+	});
+
+	app.get('/myagency',isLoggedIn , function(req, res) {
+		// render the page and pass in any flash data if it exists
+		res.render('myagency.ejs', { message: req.flash('loginMessage') });
+	});
+
+	app.get('/myAgencyList',isLoggedIn , function(req, res) {
+		// render the page and pass in any flash data if it exists
+		User.find({ _id : { "$in":  req.user.partners }}, function( err, respon){
+    	if (err) return false
+    		res.json(respon)
+    	});
+	});
+
+	app.get('/agencyRequest',isLoggedIn, function(req, res) {
+		// render the page and pass in any flash data if it exists
+		// console.dir('HEKLO');
+		Request.find({to_id:req.user._id , req_status : 0}, function(err, requests){
+			if(err)
+				return false
+			console.dir(req.user._id);
+			console.dir(requests);
+			res.json(requests)
+		});
+		// res.render('myagency.ejs', { message: req.flash('loginMessage') });
 	});
 
 	app.post('/api/authenticate/', function(req, res){
@@ -52,6 +81,13 @@ module.exports = function(app, passport) {
         });
 	});
 
+	app.get('/api/genToken/:token', function(req, res){
+        var token = jwt.sign(req.params.token, app.get('superSecret'), {
+          		expiresIn: '1000s', // expires in 24 hours
+        	});
+        res.json(token);
+	});
+
 	app.get('/api/authenticatetest/:token', function(req, res){
 		if (req.params.token){
 		jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
@@ -65,6 +101,145 @@ module.exports = function(app, passport) {
 	    });
 	}
 
+	});
+
+	app.get('/api/getOperator/:token', function(req, res){
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+		        // res.json(decoded);
+		        User.find({},'companyName',function (err, users){
+		        	res.json(users);
+		        })
+		        // req.decoded = decoded;
+		        // var arr = ['Tiger Kingdom','Phi Phi'];
+		        // res.json(arr);
+		        // Place.getPlaceInformation();
+		      }
+		    });
+		}
+		
+	});
+
+	app.get('/api/getMyOperator/:token', function(req, res){
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+		        // res.json(decoded);
+		        req.decoded = decoded; 
+		        // console.dir(req)
+		        // var arr = ['Tiger Kingdom','Phi Phi'];
+
+		        // getCompanyAPI
+		        // res.json(arr);
+		        // Place.getPlaceInformation();
+		        
+		        User.findOne({ 'local.email' :  decoded }, function(err, user) {
+		        	// console.dir(user.partners)
+
+		        	Company.getCompanyAPI(user.partners, function (myCompany){
+		        		// console.dir(myCompany)
+		        		// console.dir("load")
+		        		res.json(myCompany);
+		        	});
+		        });
+		      }
+		    });
+		}
+		
+	});
+
+	app.post('/api/addPartner/:token',function (req, res){
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+		        // res.json(decoded);
+		        // req.decoded = decoded; 
+		        // console.dir(req)
+		        // var arr = ['Tiger Kingdom','Phi Phi'];
+
+		        // getCompanyAPI
+		        // res.json(arr);
+		        // Place.getPlaceInformation();
+		        
+		        User.findOne({ 'local.email' :  decoded }, function(err, user) {
+		        	// console.dir(user.partners)
+		        	// res.json("Yow");
+		        	Request.findOne({ from_id: user._id, to_id: req.body.to_id}, function(err, request){
+
+		        		if(!request){
+		        			var request = new Request({
+		        				from_id		: 	user._id,
+		        				to_id   	: 	req.body.to_id,
+		        				req_status	: 	0
+		        			})
+
+		        			request.save(function(err){
+		        				if(err)
+		        					res.json(err)
+		        				res.json("success");
+		        			});
+		        		}else{
+		        			if(request.req_status == 2){
+		        				request.req_status = 0;
+
+		        				request.save(function(err){
+		        				if(err)
+		        					res.json(err)
+		        				res.json("success");
+		        			});
+		        			}
+		        			res.json("You used to request this");
+		        		}
+		        		
+		        	});
+
+		        	// Company.getCompanyAPI(user.partners, function (myCompany){
+		        	// 	// console.dir(myCompany)
+		        	// 	// console.dir("load")
+		        	// 	res.json(myCompany);
+		        	// });
+		        // res.json("Yow");
+		        });
+		      }
+		    });
+		}
+
+		console.dir(req.params.token);
+		// res.json("falseeee");
+	});
+
+	app.put('/responseToRequest',isLoggedIn, function(req, res){
+		Request.findOne({_id: req.body.request_id}, function(err, request){
+			if(req.body.req_status!=null && request.req_status!=null){
+				if(req.body.req_status == 1){
+					request.req_status =  Number(req.body.req_status);
+					Subscriber.subscriber(request.from_id, request.to_id);
+					Subscriber.subscriber(request.to_id, request.from_id);
+					request.save(function(){
+						res.json("UPDATE "+request.to_id+":"+request.from_id);
+					})
+				}
+				if(req.body.req_status == 2){
+					request.req_status = 2;
+					request.save(function(){
+						res.json("UPDATED ");
+					})
+					
+				}
+			}else{
+				res.json("FALSE"+req.body.req_status+"  "+request.req_status)
+			}
+		});
 	});
 
 	app.post('/loginAPI', passport.authenticate('local-mobile-login'));
@@ -132,6 +307,45 @@ module.exports = function(app, passport) {
 	app.get('/mycustomer', isLoggedIn, function(req, res) {
 		res.render('mycustomer.ejs', { message: req.flash('signupMessage') });
 	});
+
+
+
+	// =====================================
+	// SERVICE ==============================
+	// =====================================
+
+	app.get('/service', isLoggedIn, function(req, res) {
+		Service.getService(req.user.local.email, function(services){
+			res.json(services);
+		});
+	});
+
+	app.get('/service/:service_id', isLoggedIn, function(req, res) {
+		Service.getServiceById(req.params.service_id, function(services){
+			res.json(services);
+		});
+	});
+
+	app.post('/service', isLoggedIn, function(req, res) {
+		// console.dir(req.body);
+		Service.saveService(req,function(){
+			res.json("Success");
+		});
+	});
+
+	app.put('/service/:service_id', isLoggedIn, function(req, res) {
+		Service.editService(req, function(service){
+			res.json(service);
+		})
+	});
+
+	app.delete('/service/:service_id', isLoggedIn, function(req, res) {
+		Service.deleteService(req, function(){
+			res.send("Success");
+		})
+	});
+
+
 
 
 	// =====================================

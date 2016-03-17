@@ -1,10 +1,9 @@
 angular.module('myPlace', [])
 .controller('MyPlaceCtrl', function($scope, $http) {
-	$scope.email = window.palceRederData[0]["email"];
-	$scope.price = window.palceRederData[0]["price"];
-	$scope.items = window.placeContent;
-	$scope.address = window.palceRederData[0]["address"]
-
+	// $scope.email = window.palceRederData[0]["email"];
+	// $scope.price = window.palceRederData[0]["price"];
+	// $scope.items = window.placeContent;
+	// $scope.address = window.palceRederData[0]["address"];
 
 
 	$scope.updatePrice = function(price) {
@@ -59,9 +58,9 @@ angular.module('myPlace', [])
 		$scope.newcontent.url = "";
     };
 
-    $scope.save = function(content){
-    	console.dir(content);
-    	$http.post('/content',  content ,{cache:false})
+    $scope.save = function(service){
+    	console.dir(service);
+    	$http.post('/service',  service ,{cache:false})
 			.success(function (data){
 				alert("Add Seccess.");
 			})
@@ -70,6 +69,58 @@ angular.module('myPlace', [])
 			});
     };
 
+
+    $scope.apush = function(){
+    	$scope.newservice.tranfer.push({});
+    }
+
+    $scope.push = function(){
+    	$scope.newservice.price.push({});
+    }
+})
+.controller('MyServiceCtrl', function($scope, $http) {
+	init();
+
+
+	function init(){
+		$http.get('/service' ,{cache:false})
+			.success(function (data){
+				$scope.services = data;
+				console.dir($scope.services)
+			})
+			.error(function (data, status){
+				alert(status);
+			});
+	}
+
+	$scope.getAllService = function() {
+		$http.get('/service' ,{cache:false})
+			.success(function (data){
+				$scope.services = data;
+			})
+			.error(function (data, status){
+				alert(status);
+			});
+    };
+
+    $scope.edit = function(items) {
+		$scope.editcontent = items;
+    };
+
+    $scope.delete = function(c_id) {
+		$http.delete('/service/'+c_id ,{cache:false})
+			.success(function (data){
+				init()
+			})
+			.error(function (data, status){
+				alert(status);
+			});
+    };
+
+    $scope.push = function(){
+    	alert();
+    	$scope.newservice.tranfer.push('');
+    }
 });
 
 
@@ -79,7 +130,7 @@ angular.module('myCustomer', [])
 	load();
 	function load(){
 		$scope.$emit('LOAD');
-	    $http.get("http://localhost:8080/voucher")
+	    $http.get("voucher")
 	    .then(
 	    	function (response) {
 	    		console.dir(response.data);

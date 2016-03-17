@@ -1,0 +1,203 @@
+<html ng-app="myAgency"><head>
+<!-- Standard Meta -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="dist/angular/angular.js"></script>
+<script src="dist/js/appMyagency.js"></script>
+<script src="dist/semantic.min.js"></script>
+<link rel="stylesheet" type="text/css" href="dist/semantic.min.css">
+<style type="text/css">
+	body {
+		background-color: #DADADA;
+	}
+	body > .grid {
+		height: 100%;
+	}
+	.image {
+		margin-top: -100px;
+	}
+	.column {
+
+
+	}
+	.main.container {
+		margin-top: 7em;
+
+	}
+	.main{
+
+	}
+	.container{
+		/*background: red;*/
+	}
+</style>
+
+<script>
+	$(document).ready(function() {
+		$('.menu .item')
+		.tab();
+	});
+</script>
+
+</head>
+<body ng-controller="appCtrl">
+	<% include navigation %>
+
+	<div class="ui container main">
+		<div class="ui top attached tabular menu">
+		<a class="item active" data-tab="first">Registering</a>
+			<a class="item" data-tab="second">My Agency</a>
+			<!-- <a class="item" data-tab="third">Visited</a> -->
+		</div>
+		<div class="ui bottom attached tab segment active" data-tab="first" ng-controller="RequestCtrl">
+				<div class="ui segment">
+				<h2 class="ui header">Agency Request</h2>
+				<p>Agency who request to work with us.</p>
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Company Name</th>
+								<th>Address</th>
+								<th>Province</th>
+								<th>ID Operators</th>
+								<th>Approve</th>
+								<th>Reject</th>
+								<th>More Information</th>
+							</tr>
+						</thead>
+						<tbody ng-repeat="request in requests">
+							<tr>
+								<td>Jakkapan Tour</td>
+								<td>130/103 Kathu Kathu Phuket 83120</td>
+								<td>Phuket</td>
+								<td>13322492322</td>
+								<td><button class="ui button primary" ng-click="confirmPartner(request._id, 1)">Approve</button></td>
+								<td><button class="ui button red" ng-click="confirmPartner(request._id, 2)">Inject</button></td>
+								<td><a href="#">View</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<div class="ui bottom attached tab segment" data-tab="second" ng-controller="MyAgencyCtrl">
+			<div class="ui segment">
+				<h2 class="ui header">My Agency</h2>
+				<p>Who work for us.</p>
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Company Name</th>
+								<th>License NO.</th>
+								<th>Information</th>
+								<th>Termination</th>
+							</tr>
+						</thead>
+						<tbody ng-repeat="agency in myAgencyList">
+							<tr>
+								<td>{{agency._id}}</td>
+								<td>32/00601</td>
+								<td><a href="#">View</td>
+								<td><button class="ui button red" >Termination</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="ui bottom attached tab segment" data-tab="third">
+				<div class="ui segment">
+				<h2 class="ui header">Visited</h2>
+				<p>Customers who was visited.</p>
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Agency Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Jakkapan Thonglum</td>
+								<td>22/01/2016</td>
+								<td>13:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>John Lennon</td>
+								<td>25/01/2016</td>
+								<td>10:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>Steve Job</td>
+								<td>29/01/2016</td>
+								<td>09:00</td>
+								<td>Phuket Jett Tour</td>
+							</tr>
+							<tr>
+								<td>Merk zuckerberg</td>
+								<td>29/01/2016</td>
+								<td>13:00</td>
+								<td>Krabi Travel</td>
+							</tr>
+							<tr>
+								<td>Jakkapan Thonglum</td>
+								<td>22/01/2016</td>
+								<td>13:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>John Lennon</td>
+								<td>25/01/2016</td>
+								<td>10:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>Steve Job</td>
+								<td>29/01/2016</td>
+								<td>09:00</td>
+								<td>Phuket Jett Tour</td>
+							</tr>
+							<tr>
+								<td>Merk zuckerberg</td>
+								<td>29/01/2016</td>
+								<td>13:00</td>
+								<td>Krabi Travel</td>
+							</tr>
+							<tr>
+								<td>Jakkapan Thonglum</td>
+								<td>22/01/2016</td>
+								<td>13:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>John Lennon</td>
+								<td>25/01/2016</td>
+								<td>10:00</td>
+								<td>Mr. Donut</td>
+							</tr>
+							<tr>
+								<td>Steve Job</td>
+								<td>29/01/2016</td>
+								<td>09:00</td>
+								<td>Phuket Jett Tour</td>
+							</tr>
+							<tr>
+								<td>Merk zuckerberg</td>
+								<td>29/01/2016</td>
+								<td>13:00</td>
+								<td>Krabi Travel</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</div>
+		</div>
+
+
+
+	</body></html>

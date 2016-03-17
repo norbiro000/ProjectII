@@ -9,8 +9,9 @@ var userSchema = mongoose.Schema({
     local            : {
         email        : String,
         password     : String,
-        Type 		 : Number,
+        user_type 	 : Number,
     },
+    companyName	 : String,
     partners		 : [ String ]
 
 });

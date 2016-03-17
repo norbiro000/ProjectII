@@ -36,40 +36,69 @@
 </style>
 
 <script>
+	function next(){
+		$(document).ready(function() {
+			$('#content-step1').transition({
+				animation  : 'fade right',
+				onComplete : function() {
+					$('#step1').attr('class', 'step disabled');
+					$('#content-step2').delay( 1000 ).transition('fade left');
+					$('#step2').attr('class', 'step active');
+					$('#btn-next').attr('onclick', 'next2()');
+				}
+			});
+		});
+	}
+
+	function next2(){
+		$(document).ready(function() {
+			$('#content-step2').transition({
+				animation  : 'fade right',
+				onComplete : function() {
+					$('#step2').attr('class', 'step disabled');
+					$('#content-step3').delay( 1000 ).transition('fade left');
+					$('#step3').attr('class', 'step active');
+					$('#btn-next').attr('onclick', '');
+					$('#btn-next').hide();
+					$('#btn-save').show();
+				}
+			});
+		});
+	}
+
+	function next3(){
+
+	}
+
+
 	var asdf;
 	$(document).ready(function() {
+		$('.ui.item .ui.embed').embed();
+		$('#btn-save').hide();
+		$('#content-step2').hide();
+		$('#content-step3').hide();
 		$('.menu .item')
 		.tab();
 
-		$('.ui.item .ui.embed').embed();
+
 
 		$('.show-modal').on('click', function(){
 			$('#newcontent-modal')
-			.modal('setting', {
-				closable  : true,
-				onDeny    : function(){
-					window.alert('Wait not yet!');
-					return false;
-				},
-				onApprove : function() {
-					var form = $('#newcontent').serializeArray();
-					$.ajax({
-						method : 'POST',
-						data: form,
-						url: 'http://localhost:8888/api/placecontent/',
-						success: function(data){
-							console.dir(data);	
-						},
-						error: function( data ){
-
-						}
-					});
-					window.alert('Approved!');
+			.modal('setting',{
+				onShow : function(){
+					console.dir("hide");
+					$('#btn-save').hide();
+					$('#content-step2').hide();
+					$('#content-step3').hide();
 				}
 			})
-			.modal('show')
-			;
+			.modal('show');
 		});
+
+		$('#next').on('click',function (){
+// alert();
+});
+
 
 		$('.show-edit-modal').on('click', function(){
 			$('#editcontent-modal')
@@ -93,7 +122,8 @@
 						}
 					});
 					window.alert('Approved!');
-				}
+				},
+
 			})
 			.modal('show')
 			;
@@ -113,8 +143,8 @@
 
 	<div class="ui container main" ng-Controller="MyPlaceCtrl">
 		<div class="ui top attached tabular menu">
-			<a class="item active" data-tab="first">Price</a>
-			<a class="item" data-tab="fourth">Set Content</a>
+			<a class="item active" data-tab="first">Profile</a>
+			<a class="item" data-tab="fourth">Services</a>
 			<a class="item" data-tab="second">Address</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="first">
@@ -159,71 +189,70 @@
 		</div>
 
 
-		<div class="ui bottom attached tab segment" data-tab="fourth">
+		<div class="ui bottom attached tab segment" data-tab="fourth" ng-Controller="MyServiceCtrl">
 			<div class="ui segment">
-				<h2 class="ui header">Set Content</h2>
+				<h2 class="ui header">My Services</h2>
 				<p>Agency will show them to tourists.</p>
-				<h4 class="ui dividing header">Description Information</h4>
-				<form class="ui form">
-					<div class="two fields">
-						<div class="field">
-							<label>Languages</label>
-							<select class="ui fluid dropdown">
-								<option value="en">English</option>
-								<option value="th">Thai</option>
-								<option value="cn">Chinese</option>
-							</select>
-						</div>
-						<div class="field">
-							<label>Description.</label>
-							<textarea rows="2"></textarea>
-						</div>
-					</div>
-					<div class="field">
-						<button class="ui button" type="submit">Other Language</button>
-					</div>
-					<div class="field">
-						<button class="ui button teal" type="submit">Save</button>
-					</div>
-				</form>
-			</div>
-
-			<div class="ui segment">
-				<h2 class="ui header">More Detail</h2>
-				<p>Agency will show them to tourists.</p>
-				<button class="ui button teal show-modal" ng-click="">New Content</button>
+				<button class="ui button teal show-modal" ng-click="">New Service</button>
 
 
 				<!-- ITEM -->
-				<div class="ui items" ng-repeat="item in items" style="box-shadow: 0 1px 2px 0 rgba(34,36,38,.15); padding :10px; border: 1px solid rgba(34,36,38,.15);" ng-init="index=0">
+				<div class="ui items" ng-repeat="service in services" style="box-shadow: 0 1px 2px 0 rgba(34,36,38,.15); padding :10px; border: 1px solid rgba(34,36,38,.15);" ng-init="index=0">
 					<div class="ui item grid" data-index="{{index}}">
+						<div class="row">
+							<div class="ui embed sixteen wide column" data-url="{{service.content.url}}" data-placeholder="" style="height:300px" ng-if="service.content.ttype == 'video'"></div>
 
-						<div class="ui embed eight wide column" data-url="{{item.content.url}}" data-placeholder="" style="height:300px" ng-if="item.content.ttype == 'video'"></div>
 
 
-						<!-- </div> -->
-						<div class="ui large image" ng-if="item.content.ttype == 'image'">
-							<img ng-src="{{item.content.url}}">
+							<!-- </div> -->
+							<div class="ui large image" ng-if="service.content.ttype == 'image'">
+								<img ng-src="{{service.content.url}}">
+							</div>
 						</div>
 
-						<div class="content eight wide column" style=" padding :10px;">
-							<div class="header">{{item.content.title}}</div>
-							<div class="description">
-								<p style="word-wrap: break-word;">
-									{{item.content.description}}
-								</p>
+						<!-- <div class="row"> -->
+							<div class="ui content ten wide column" style=" padding :10px;">
+									<div class="header">{{service.content.service_name}}</div>
+									<div class="description">
+										<p style="word-wrap: break-word;">
+											{{service.content.description}}
+										</p>
+									</div>
 							</div>
+
+
+							<div class="content six wide column">
+								<div class="header">Price Detail</div>
+								<div class="description">
+									<div class="ui tag labels" ng-repeat="x in service.price">
+										<a class="ui label">
+											{{x.tag}}:{{x.netprice}}:{{x.maxprice}}
+										</a>
+									</div>
+								</div>
+								<hr>
+								<div class="header">Tranfer Detail</div>
+								<div class="description">
+									<div class="ui tag labels" ng-repeat="x in service.tranfer">
+										<a class="ui label">
+											{{x.tag}}:{{x.price}}
+										</a>
+									</div>
+								</div>
+							</div>
+
 							<div class="extra">
-								<button class="ui right floated primary button show-edit-modal" ng-click="edit(items[0])">
+								<button class="ui right floated primary button show-edit-modal" ng-click="edit(services[$index])">
 									Edit
 									<i class="right chevron icon"></i>
 								</button>
-								<div class="ui right floated Red button" ng-click="delete(item._id)">
+								<div class="ui right floated Red button" ng-click="delete(service._id)">
 									Delete
 									<i class="right chevron icon"></i>
 								</div>
 							</div>
-						</div>
+							
+						<!-- </div> -->
 					</div>
 				</div>
 				<!-- END ITEM -->
@@ -274,113 +303,242 @@
 		<div class="ui modal" id="newcontent-modal">
 			<div ng-init="newcontent.title=''"></div>
 			<div ng-init="newcontent.description=''"></div>
-			<div class="header">Header</div>
+			<div class="header">
+				<div class="ui three top attached steps">
+					<div class="step active" id="step1">
+						<i class="truck icon"></i>
+						<div class="content">
+							<div class="title">Set Name</div>
+							<div class="description">Choose your shipping options</div>
+						</div>
+					</div>
+					<div class="disabled step" id="step2">
+						<i class="payment icon"></i>
+						<div class="content">
+							<div class="title">Setting Price</div>
+							<div class="description">Enter billing information</div>
+						</div>
+					</div>
+					<div class="disabled step end" id="step3">
+						<i class="truck icon"></i>
+						<div class="content">
+							<div class="title">Confirm Order</div>
+							<div class="description">Verify order details</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- END HEADER -->
+
+
 			<div class="content">
-				<form class="ui form" id="newcontent" >
-					<div ngif=""></div>
-					<div class="grouped fields">
-						<label>How often do you use checkboxes?</label>
-						<div class="field">
-							<div class="ui radio checkbox" ng-init="newcontent.type='image'">
-								<input type="radio" name="example1" checked="checked" ng-model="newcontent.type" value="image">
-								<label>Image</label>
+				{{newservice}}
+				<div id="content-step1">
+					<form class="ui form" id="newcontent" >
+						<div class="grouped fields">
+							<label>How often do you use checkboxes?</label>
+							<div class="field">
+								<div class="ui radio checkbox" ng-init="newservice.content.ttype='image'">
+									<input type="radio" name="example1" checked="checked" ng-model="newservice.content.ttype" value="image">
+									<label>Image</label>
+								</div>
+							</div>
+							<div class="field">
+								<div class="ui radio checkbox">
+									<input type="radio" name="example1" ng-model="newservice.content.ttype" value="video">
+									<label>Video</label>
+								</div>
 							</div>
 						</div>
-						<div class="field">
-							<div class="ui radio checkbox">
-								<input type="radio" name="example1" ng-model="newcontent.type" value="video">
-								<label>Video</label>
+
+						<div ng-if="newservice.content.ttype == 'image'">
+							<div class="field">
+								<input type="file" name="file" ng-model="newservice.content.url">
 							</div>
 						</div>
-					</div>
-
-					<div ng-if="newcontent.type == 'image'">
-						<div class="field">
-							<input type="file" name="file" ng-model="newcontent.url">
+						<div ng-if="newservice.content.ttype == 'video'">
+							<div class="field">
+								<label>URL</label>
+								<input type="text" name="url" placeholder="URL" ng-model="newservice.content.url">
+							</div>
 						</div>
-					</div>
-					<div ng-if="newcontent.type == 'video'">
+
 						<div class="field">
-							<label>URL</label>
-							<input type="text" name="url" placeholder="URL" ng-model="newcontent.url">
+							<label>Service Name</label>
+							<input type="text" name="Service Name" placeholder="Service Name" ng-model="newservice.content.service_name">
 						</div>
-					</div>
+						<div class="field">
+							<label>Descripton</label>
+							<textarea placeholder="Description" name="description" ng-model="newservice.content.description"></textarea>
+						</div>
+					</form>
+				</div >
 
-					<div class="field">
-						<label>Title</label>
-						<input type="text" name="title" placeholder="Title" ng-model="newcontent.title">
-					</div>
-					<div class="field">
-						<label>descripton</label>
-						<textarea placeholder="Description" name="description" ng-model="newcontent.description"></textarea>
-					</div>
-				</form>
+				<div id="content-step2">
+					<form class="ui form" id="newcontent" >
+						<div ngif=""></div>
+						<div class="grouped fields">
+							<label>How often do you use checkboxes?</label>	
+							<div ng-init="newservice.price=[]"></div>
+							<div class="ui">
+							<button ng-click="push()">asdf</button>
+							</div>
+							<!-- {{tranfer}} -->
+							<div  ng-repeat="x in newservice.price">
+								<div class="ui three column content grid ui segment">
+									<!-- <div class="three column content grid"> -->
+										<div class="column field">
+										<div class="ui left action input">
+										  <button class="ui teal labeled icon button">
+										    <i class="cart icon"></i>
+										    Tag
+										  </button>
+										  <input type="text" ng-model="x.tag">
+										</div>
+										</div>
+										<div class="column field">
+										<div class="ui  left action input">
+										  <button class="ui teal labeled icon button">
+										    <i class="cart icon"></i>
+										    Net Price
+										  </button>
+										  <input type="text" ng-model="x.netprice">
+										</div>
+										</div>
 
-			</div>
-			<div class="footer">
-				<div class="actions">
-					<div class="ui button " ng-click="clear()">Clear</div>
-					<div class="ui button red">Cancel</div>
-					<div class="ui cancel button teal" ng-click="save(newcontent)">Save</div>
+										<div class="column field">
+										<div class="ui  left action input">
+										  <button class="ui teal labeled icon button">
+										    <i class="cart icon"></i>
+										    Max Price
+										  </button>
+										  <input type="text" ng-model="x.maxprice">
+										</div>
+										</div>
+
+										
+									<!-- </div> -->
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div id="content-step3">
+					<form class="ui form" id="newcontent" >
+						<div ngif=""></div>
+						<div class="grouped fields">
+							<label>How often do you use checkboxes?</label>
+							<div ng-init="newservice.tranfer=[]"></div>
+							<button ng-click="apush()">asdf</button>
+							<!-- {{tranfer}} -->
+							<div  ng-repeat="x in newservice.tranfer">
+								<div class="ui grid">
+									<div class="row sixteen wide column content">
+										<div class="eight wide column field row">
+											<label>Tag</label>
+											<input type="text" name="title" placeholder="In Phuket" ng-model="x.tag">
+										</div>
+										<div class="eight wide column field row">
+											<label>Price</label>
+											<input type="text" name="Price Exclude" placeholder="300" ng-model="x.price">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="footer">
+					<div class="actions">
+						<div class="ui button" ng-click="clear()">Clear</div>
+						<div class="ui button red" id="btn-previous">Cancel</div>
+						<button class="ui button teal" id="btn-next" onclick="next()">Next</button>
+						<button class="ui button teal" id="btn-save" ng-click="save(newservice)">Next</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END MODAL -->
+			<!-- END MODAL -->
 
-		<!-- MODAL ZONE -->
-		<div class="ui modal edit" id="editcontent-modal">
-		{{editcontent}}
-			<div class="header">Header</div>
-			<div class="content">
-				<form class="ui form" id="newcontent" >
-					<div ngif=""></div>
-					<div class="grouped fields">
-						<label>How often do you use checkboxes?</label>
-						<div class="field">
-							<div class="ui radio checkbox">
-								<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="image">
-								<label>Image</label>
+			<!-- MODAL ZONE -->
+			<div class="ui modal edit" id="editcontent-modal">
+				<div class="ui tablet stackable ">
+					<div class="header">HELLO</div>
+					<div class="content">
+
+						<div class="ui small steps">
+							<div class="step">
+								<i class="truck icon"></i>
+								<div class="content">
+									<div class="title">Shipping</div>
+									<div class="description">Choose your shipping options</div>
+								</div>
+							</div>
+							<div class="active step">
+								<i class="payment icon"></i>
+								<div class="content">
+									<div class="title">Billing</div>
+									<div class="description">Enter billing information</div>
+								</div>
+							</div>
+							<div class="disabled step">
+								<i class="truck icon"></i>
+								<div class="content">
+									<div class="title">Confirm Order</div>
+									<div class="description">Verify order details</div>
+								</div>
 							</div>
 						</div>
-						<div class="field">
-							<div class="ui radio checkbox">
-								<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="video">
-								<label>Video</label>
+
+						<form class="ui form" id="newcontent" >
+							<div ngif=""></div>
+							<div class="grouped fields">
+								<label>How often do you use checkboxes?</label>
+								<div class="field">
+									<div class="ui radio checkbox">
+										<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="image">
+										<label>Image</label>
+									</div>
+								</div>
+								<div class="field">
+									<div class="ui radio checkbox">
+										<input type="radio" name="example2" ng-model="editcontent.content.ttype" value="video">
+										<label>Video</label>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
 
-					<div ng-if="editcontent.content.ttype == 'image'">
-						<div class="field">
-							<input type="file" name="file" ng-model="editcontent.content.url">
-						</div>
-					</div>
-					<div ng-if="editcontent.content.ttype == 'video'">
-						<div class="field">
-							<label>URL</label>
-							<input type="text" name="url" placeholder="URL" ng-model="editcontent.content.url">
-						</div>
-					</div>
+							<div ng-if="editcontent.content.ttype == 'image'">
+								<div class="field">
+									<input type="file" name="file" ng-model="editcontent.content.url">
+								</div>
+							</div>
+							<div ng-if="editcontent.content.ttype == 'video'">
+								<div class="field">
+									<label>URL</label>
+									<input type="text" name="url" placeholder="URL" ng-model="editcontent.content.url">
+								</div>
+							</div>
 
-					<div class="field">
-						<label>Title</label>
-						<input type="text" name="title" placeholder="Title" ng-model="editcontent.content.title">
+							<div class="field">
+								<label>Title</label>
+								<input type="text" name="title" placeholder="Title" ng-model="editcontent.content.title">
+							</div>
+							<div class="field">
+								<label>descripton</label>
+								<textarea placeholder="Description" name="description" ng-model="editcontent.content.description"></textarea>
+							</div>
+						</form>
+
 					</div>
-					<div class="field">
-						<label>descripton</label>
-						<textarea placeholder="Description" name="description" ng-model="editcontent.content.description"></textarea>
+					<div class="actions">
+						<div class="ui button red">Cancel</div>
+						<div class="ui cancel button teal" ng-click="update(editcontent._id)">Next</div>
 					</div>
-				</form>
+				</div>
+				<!-- END MODAL -->
 
 			</div>
-			<div class="actions">
-				<div class="ui button red">Cancel</div>
-				<div class="ui cancel button teal" ng-click="update(editcontent._id)">Save</div>
-			</div>
-		</div>
-		<!-- END MODAL -->
-
-	</div>
 
 
-</body></html>
+		</body></html>
