@@ -3,7 +3,19 @@ angular.module('myPlace', [])
 	// $scope.email = window.palceRederData[0]["email"];
 	// $scope.price = window.palceRederData[0]["price"];
 	// $scope.items = window.placeContent;
-	// $scope.address = window.palceRederData[0]["address"];
+
+
+	init()
+
+	function init(price) {
+		$http.get('/myInformation', JSON.stringify({price}) ,{cache:false})
+			.success(function (data){
+				$scope.address = data.address;
+			})
+			.error(function (data, status){
+				alert(status);
+			});
+    };
 
 
 	$scope.updatePrice = function(price) {
@@ -17,7 +29,7 @@ angular.module('myPlace', [])
     };
 
     $scope.updateAddress = function(address) {
-		$http.put('/myPlace', JSON.stringify({address}) ,{cache:false})
+		$http.put('/address', JSON.stringify({address}) ,{cache:false})
 			.success(function (data){
 				alert("Update Seccess.");
 			})
@@ -71,6 +83,7 @@ angular.module('myPlace', [])
 
 
     $scope.apush = function(){
+    	
     	$scope.newservice.tranfer.push({});
     }
 
@@ -162,6 +175,7 @@ angular.module('myCustomer', [])
 			.success(function (data){
 				load();
 				$scope.$emit('UNLOAD');
+
 			})
 			.error(function (data, status){
 				alert(status);

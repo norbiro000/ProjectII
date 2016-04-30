@@ -83,6 +83,9 @@
 			</div>
 		<div class="ui bottom attached tab segment" data-tab="second" ng-controller="MyAgencyCtrl">
 			<div class="ui segment">
+			<div class="ui active dimmer inverted" ng-show="loading">
+						<div class="ui loader"></div>
+					</div>
 				<h2 class="ui header">My Agency</h2>
 				<p>Who work for us.</p>
 					<table class="ui table">

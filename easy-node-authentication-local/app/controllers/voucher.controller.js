@@ -52,6 +52,28 @@ exports.insertVoucher = function (req, res) {
 	});
 }
 
+exports.apiInsertVoucher = function (email, req, done) {
+	console.dir(req.body);
+	var voucher = new Voucher();
+
+	voucher.operator_email = req.body.operator_email,
+    voucher.agency_email =  email,
+    voucher.datas = req.body.datas,
+    voucher.state = 0
+
+	voucher.save(function(err){
+		if(err)
+			return false;	
+		done(voucher)
+	});
+}
+
+exports.apiGetVoucher = function (email, req, done) {
+	Voucher.find({agency_email: email}, function( err, respon){
+    	done(respon);
+    });
+}
+
 exports.deleteVoucher = function (req, res) {
 	console.dir(req.session.email);
 	Voucher.findOne({ email:req.session.email }, function (err, Voucher){

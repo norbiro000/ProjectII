@@ -11,8 +11,15 @@ var userSchema = mongoose.Schema({
         password     : String,
         user_type 	 : Number,
     },
-    companyName	 : String,
-    partners		 : [ String ]
+    companyName	     : String,
+    partners		 : [ String ],
+    address 		 : {
+    	telephone 	 : String,
+    	email  		 : String,
+        fax  		 : String,
+    	province 	 : String,
+    	address  	 : String,
+    },
 
 });
 

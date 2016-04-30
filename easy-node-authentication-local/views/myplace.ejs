@@ -143,11 +143,11 @@
 
 	<div class="ui container main" ng-Controller="MyPlaceCtrl">
 		<div class="ui top attached tabular menu">
-			<a class="item active" data-tab="first">Profile</a>
-			<a class="item" data-tab="fourth">Services</a>
+			<!-- <a class="item active" data-tab="first">Profile</a> -->
+			<a class="item active" data-tab="fourth">Services</a>
 			<a class="item" data-tab="second">Address</a>
 		</div>
-		<div class="ui bottom attached tab segment active" data-tab="first">
+		<!-- <div class="ui bottom attached tab segment active" data-tab="first">
 			<div class="ui segment">
 				<h2 class="ui header">Set Price</h2>
 				<p>Set price for you agent to show and sell for you.</p>
@@ -186,10 +186,10 @@
 					</div>
 				</form>
 			</div>
-		</div>
+		</div> -->
 
 
-		<div class="ui bottom attached tab segment" data-tab="fourth" ng-Controller="MyServiceCtrl">
+		<div class="ui bottom attached tab segment active" data-tab="fourth" ng-Controller="MyServiceCtrl">
 			<div class="ui segment">
 				<h2 class="ui header">My Services</h2>
 				<p>Agency will show them to tourists.</p>
@@ -270,12 +270,12 @@
 				<h4 class="ui dividing header">Address Information</h4>
 				<form class="ui form">
 					<div class="field">
-						<label>Place Name</label>
-						<input type="text" name="first-name" placeholder="" ng-model="address.placename">
-					</div>
-					<div class="field">
 						<label>Tel.</label>
 						<input type="text" name="last-name" placeholder="" ng-model="address.telephone">
+					</div>
+					<div class="field">
+						<label>Fax.</label>
+						<input type="text" name="last-name" placeholder="" ng-model="address.fax">
 					</div>
 					<div class="field">
 						<label>Email</label>
@@ -331,7 +331,6 @@
 
 
 			<div class="content">
-				{{newservice}}
 				<div id="content-step1">
 					<form class="ui form" id="newcontent" >
 						<div class="grouped fields">
@@ -380,7 +379,7 @@
 							<label>How often do you use checkboxes?</label>	
 							<div ng-init="newservice.price=[]"></div>
 							<div class="ui">
-							<button ng-click="push()">asdf</button>
+							<button ng-click="push()" class="ui button">Add</button>
 							</div>
 							<!-- {{tranfer}} -->
 							<div  ng-repeat="x in newservice.price">
@@ -429,7 +428,7 @@
 						<div class="grouped fields">
 							<label>How often do you use checkboxes?</label>
 							<div ng-init="newservice.tranfer=[]"></div>
-							<button ng-click="apush()">asdf</button>
+							<button ng-click="apush()" class="ui button">Add</button>
 							<!-- {{tranfer}} -->
 							<div  ng-repeat="x in newservice.tranfer">
 								<div class="ui grid">

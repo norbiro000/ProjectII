@@ -74,8 +74,10 @@ module.exports = function(app, passport) {
             // all is well, return successful user
             // req.session.email = email //save session to user
             var token = jwt.sign(req.body.email, app.get('superSecret'), {
-          		expiresIn: '1000s', // expires in 24 hours
+          		// expiresIn: '1000s', // expires in 24 hours
         	});
+
+        	console.dir("LOGIN SUCCESS")
 
             res.json({status:"success",token:token})
         });
@@ -111,8 +113,33 @@ module.exports = function(app, passport) {
 		      } else {
 		        // if everything is good, save to request for use in other routes
 		        // res.json(decoded);
-		        User.find({},'companyName',function (err, users){
+		        User.find({},'companyName address',function (err, users){
 		        	res.json(users);
+		        })
+		        // req.decoded = decoded;
+		        // var arr = ['Tiger Kingdom','Phi Phi'];
+		        // res.json(arr);
+		        // Place.getPlaceInformation();
+		      }
+		    });
+		}
+		
+	});
+
+	app.get('/api/getOperatorById/:token/:operator_id', function(req, res){
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+		        // res.json(decoded);
+		        User.findById( req.params.operator_id ,function (err, users){
+		        	// console.dir(users)
+		        	Service.getService(users.local.email, function(services){
+		        		res.json(services);
+		        	})
+		        	
 		        })
 		        // req.decoded = decoded;
 		        // var arr = ['Tiger Kingdom','Phi Phi'];
@@ -242,6 +269,8 @@ module.exports = function(app, passport) {
 		});
 	});
 
+
+
 	app.post('/loginAPI', passport.authenticate('local-mobile-login'));
 
 	// process the login form
@@ -283,6 +312,12 @@ module.exports = function(app, passport) {
 	// PLACE ==============================
 	// =====================================
 
+	app.get('/myInformation', isLoggedIn, function(req, res) {
+		User.findOne({ 'local.email': req.user.local.email}, function (err, user){
+			res.json(user);
+		})
+	});
+
 	app.get('/myplace', isLoggedIn, function(req, res) {
 		Place.getPlaceInformation(req.user.local.email, function(place){
 			Content.getContent(req.user.local.email, function(err, content){
@@ -301,6 +336,23 @@ module.exports = function(app, passport) {
 		Place.savePlaceInformation(req, res);
 	});
 
+	app.put('/address', isLoggedIn, function(req, res) {
+		User.findOne({ 'local.email' : req.user.local.email}, function (err, user){
+
+			if(req.body.address != null || req.body.address!= undefined){
+				user.address = req.body.address
+				user.save(function(err){
+					if(err)
+						res.send("err");
+
+					res.send("complate")
+				})
+			}else{
+				res.send("err");
+			}
+		});
+	});
+
 	// =====================================
 	// CONTENT ==============================
 	// =====================================
@@ -313,6 +365,26 @@ module.exports = function(app, passport) {
 	// =====================================
 	// SERVICE ==============================
 	// =====================================
+
+	app.get('/api/myService/:token', function(req, res) {
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+
+		        req.decoded = decoded;
+		        User.findOne({'local.email':decoded} ,'partners', function( err, respon){
+		        	Service.getMyService(respon.partners, function(services){
+						res.json(services);
+					});
+		    	});
+
+		      }
+		    });
+		}
+	});
 
 	app.get('/service', isLoggedIn, function(req, res) {
 		Service.getService(req.user.local.email, function(services){
@@ -352,6 +424,44 @@ module.exports = function(app, passport) {
 	// VOUCHER ==============================
 	// =====================================
 
+	app.post('/api/booking/:token', function(req, res) {
+		// res.json( [{name:'fuck',image:'asdf.jpg'},{name:'ceme2',image:'2.jpg'}] );
+
+
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+
+		        req.decoded = decoded;
+		        Voucher.apiInsertVoucher(decoded, req, function(voucher){
+					res.json(voucher);
+				});
+		      }
+		    });
+		}
+
+	});
+
+	app.get('/api/voucher/:token', function(req, res) {
+		if (req.params.token){
+			jwt.verify(req.params.token, app.get('superSecret'), function(err, decoded) {      
+		      if (err) {
+		        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		      } else {
+		        // if everything is good, save to request for use in other routes
+
+		        req.decoded = decoded;
+		        Voucher.apiGetVoucher(decoded, req, function(voucher){
+					res.json(voucher);
+				});
+		      }
+		    });
+		}
+	});
+
 	app.get('/voucher', isLoggedIn, function(req, res) {
 		// res.json( [{name:'fuck',image:'asdf.jpg'},{name:'ceme2',image:'2.jpg'}] );
 		Voucher.getVoucher(req.user.local.email, function(voucher){
@@ -364,6 +474,8 @@ module.exports = function(app, passport) {
 			res.json(voucher);
 		});
 	});
+
+	
 
 	// app.post('/voucher', isLoggedIn, function(req, res) {
 	// 	Voucher.insertVoucher();

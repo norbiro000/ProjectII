@@ -47,6 +47,7 @@ angular.module('myAgency', [])
 	    	function (response) {
 	    		console.dir(response);
 	    	$scope.myAgencyList = response.data;
+	    	load()
 	   		$scope.$emit('UNLOAD');
 		});
 

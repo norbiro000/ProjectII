@@ -5,13 +5,13 @@ var commentSchema = mongoose.Schema({
     agency_email: String,
     createDate: { type: Date, default: Date.now },
     datas: {
-        tourProgram: String,
-        guessName: String,
-        numberOfGuess: Number,
-        date: Date,
-        meetingPoint: String,
-        time: Date,
-        remark: String
+        // tourProgram: String,
+        // guessName: String,
+        // numberOfGuess: Number,
+        // date: Date,
+        // meetingPoint: String,
+        // time: Date,
+        // remark: String
     },
     state: Number
 });

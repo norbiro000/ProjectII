@@ -48,14 +48,14 @@
 	<div class="ui container main" ng-controller="customersCtrl">
 		<div class="ui top attached tabular menu">
 			<a class="item active" data-tab="first">Booking<div class="ui red label">{{(names|filter:filterType0).length}}</div></a>
-			<a class="item" data-tab="fourth">Confirm Payment<div class="ui red label">1</div></a>
+			<a class="item" data-tab="fourth">Confirm Payment<div class="ui red label">{{(names|filter:filterType1).length}}</div></a>
 			<a class="item" data-tab="second">Coming</a>
 			<a class="item" data-tab="third">Visited</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="first">
 				<div class="ui segment">
-				<h2 class="ui header">Customer is Booking</h2>
-				<p>Customers who is booking my service.</p>
+				<h2 class="ui header">Booking</h2>
+				<!-- <p>Customers who is booking my service.</p> -->
 					<div class="ui active dimmer inverted" ng-show="loading">
 						<div class="ui loader"></div>
 					</div>
@@ -64,7 +64,7 @@
 						<thead>
 							<tr>
 								<th>Voucher ID</th>
-								<th>Customer Name</th>
+								<th>Guess Name</th>
 						<!-- 		<th>Amont</th>
 								<th>Date</th>
 								<th>Time</th> -->
@@ -74,9 +74,10 @@
 								<th>Voucher Detail</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr ng-repeat="x in names | filter:filterType0" >
-								{{name.length}}
+						<tbody >
+							<tr ng-repeat="x in names | filter:filterType0">
+
+								
 								<td>{{ x._id }}</td>
 								<td>{{ x.datas.guessName }}</td>
 								<!-- <td>1</td>
@@ -96,7 +97,7 @@
 		<div class="ui bottom attached tab segment" data-tab="fourth">
 				<div class="ui segment">
 				<h2 class="ui header">Confirm Payment</h2>
-				<p>Confirm Payment</p>
+				<!-- <p>Confirm Payment</p> -->
 				<div class="ui active dimmer inverted" ng-show="loading">
 						<div class="ui loader"></div>
 				</div>
@@ -116,11 +117,11 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="x in names | filter:filterType1" >
-								<td>DRM-114</td>
-								<td>29/01/2016</td>
-								<td>13:00</td>
+								<td>{{x._id}}</td>
+								<td>{{x.datas.date}}</td>
+								<td>{{x.datas.time}}</td>
 								<td>600 Bath</td>
-								<td>Mr. Donut</td>
+								<td>{{x.agency_email}}</td>
 								<td><button class="ui button primary" ng-click="confirmBooking(x._id, 2)">Approve</button></td>
 								<td><button class="ui button red">Disapproval</button></td>
 								<td><a href="#">View</a></td>
@@ -143,10 +144,10 @@
 						<thead>
 							<tr>
 								<th>Voucher ID</th>
-								<th>Name</th>
+								<th>Guess Name</th>
 								<th>Date</th>
 								<th>Time</th>
-								<th>Agency Name</th>
+								<th>Amount</th>
 								<!-- <th>Payment Information</th> -->
 								<th>Voucher Information</th>
 								<th>Visited</th>
@@ -155,11 +156,11 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="x in names | filter:filterType2" >
-								<td>DN-121</td>
-								<td>Jakkapan Thonglum</td>
-								<td>22/01/2016</td>
-								<td>13:00</td>
-								<td>Mr. Donut</td>
+								<td>{{x._id}}</td>
+								<td>{{x.datas.guessName}}</td>
+								<td>{{x.datas.date}}</td>
+								<td>{{x.datas.time}}</td>
+								<td>{{x.datas.numberOfGuess}}</td>
 								<!-- <td><a href="#">View</a></td> -->
 								<td><a href="#">View</a></td>
 								<td><button class="ui button primary" ng-click="confirmBooking(x._id, 3)">Visited</button>
@@ -185,12 +186,12 @@
 								<th>Agency Name</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr ng-repeat="x in names | filter:filterType3" >
+						<tbody >
+							<tr ng-repeat="x in names | filter:filterType3">
 								<td>{{x.datas.guessName}}</td>
-								<td>{{x.datas.date}}</td>
-								<td>{{x.datas.date}}</td>
-								<td>{{x.agency_email}}</td>
+								<td>{{x.datas.date}} </td>
+								<td>{{x.datas.time}} </td>
+								<td>{{x.agency_email}} </td>
 							</tr>
 						</tbody>
 					</table>

@@ -6,6 +6,15 @@ exports.getService = function (email, done ) {
     });
 };
 
+exports.getMyService = function (arr_id, done ) {
+
+    Service.find({owner_id:{ "$in":  arr_id}}, function( err, respon){
+    	if (err) res.json(err)
+	    	done(respon);
+		
+    })
+}
+
 exports.getServiceById = function (id, done ) {
     Service.find({ _id : id}, function( err, respon){
     	done(respon);
